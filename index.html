@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manuel & Geraldinho — Links</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Links do Rex</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card" role="region" aria-label="Perfis dos cachorros" data-active="manuel">
+        <div class="profile-switcher" role="tablist" aria-label="Selecionar perfil">
+          <button class="switch" data-id="manuel" aria-selected="true" role="tab" title="Manuel">
+            <span class="dot" aria-hidden="true" style="background:var(--manuel);"></span>
+            Manuel
+          </button>
+          <button class="switch" data-id="geraldinho" aria-selected="false" role="tab" title="Geraldinho">
+            <span class="dot" aria-hidden="true" style="background:var(--geraldinho);"></span>
+            Geraldinho
+          </button>
+        </div>
+
+        <div class="profile" id="profile">
+          <div class="avatar" aria-hidden="false">
+            <!-- Usando imagem local da pasta como avatar -->
+            <img src="manuelegeraldo.jpg" alt="Foto do cachorro" />
+          </div>
+          <h1 class="name" id="name">Manuel</h1>
+          <p class="bio" id="bio">Manhoso, chorão e o rei de tudo.</p>
+        </div>
+
+        <div class="links" id="links">
+          <a class="btn" href="#" target="_blank" rel="noopener">Instagram</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">Galeria</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">Vídeos</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">Agenda de Passeios</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">Doações</a>
+          <a class="btn" href="mailto:contato@meudog.com">Contato</a>
+        </div>
+
+        <footer class="card-footer">Sem rolagem global — área de links rola internamente</footer>
+      </section>
+    </main>
+
+    <script>
+      (function(){
+        const card = document.querySelector('.card');
+        const nameEl = document.getElementById('name');
+        const bioEl = document.getElementById('bio');
+        const switches = Array.from(document.querySelectorAll('.switch'));
+
+        const profiles = {
+          manuel: {
+            name: 'Manuel',
+            bio: 'Manhoso, chorão e o rei de tudo.',
+            accent: '#FD8C0C',
+            accentDark: '#c76906',
+            avatarGrad: 'linear-gradient(90deg,#FD8C0C,#FFD36E)'
+          },
+          geraldinho: {
+            name: 'Geraldinho',
+            bio: 'Corajoso e destemido.',
+            accent: '#7E4A25',
+            accentDark: '#5b351b',
+            avatarGrad: 'linear-gradient(90deg,#7E4A25,#A76A49)'
+          }
+        };
+
+        function setProfile(id){
+          const p = profiles[id];
+          if(!p) return;
+          card.dataset.active = id;
+          nameEl.textContent = p.name;
+          bioEl.textContent = p.bio;
+          // set CSS variables on card
+          card.style.setProperty('--accent', p.accent);
+          card.style.setProperty('--accent-dark', p.accentDark);
+          card.style.setProperty('--avatar-grad', p.avatarGrad);
+          // update aria-selected
+          switches.forEach(btn => btn.setAttribute('aria-selected', btn.dataset.id === id ? 'true' : 'false'));
+        }
+
+        // initialize
+        setProfile('manuel');
+
+        // attach events
+        switches.forEach(btn => {
+          btn.addEventListener('click', () => setProfile(btn.dataset.id));
+          btn.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setProfile(btn.dataset.id); }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

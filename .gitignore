@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Vite / build output
+dist/
+.vite/
+
+# Utilities
+.cache/
+coverage/
+.parcel-cache/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Misc
+.sass-cache
+.nyc_output
+.turbo
+*.tgz
+node-repl-history
