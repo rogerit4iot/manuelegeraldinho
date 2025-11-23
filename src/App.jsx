@@ -45,6 +45,20 @@ export default function App(){
     }
   }
 
+  function sendAnalytics(eventName, payload){
+    try{
+      // GA4
+      if(window.gtag){
+        window.gtag('event', eventName, payload)
+      }
+      // Plausible
+      if(window.plausible){
+        // plausible takes (eventName, {props: {...}})
+        window.plausible(eventName, {props: payload})
+      }
+    }catch(e){ /* no-op */ }
+  }
+
   const coupons = [
     { title: 'Petz', code: 'NENEZUDO', discount: '10%', url: 'https://www.petz.com.br/' },
     { title: 'Tapz', code: 'NENEZUDO', discount: '10%', url: 'https://tapz.com.br/parceiro/manuelgeraldinho/' },
@@ -120,7 +134,7 @@ export default function App(){
 
             if(isMail){
               return (
-                <button key={key} className="btn btn-copy" onClick={(e)=>handleCopyEmail(e, l.href)} aria-label={`Copiar email ${l.href}`}>
+                <button key={key} className="btn btn-copy" onClick={(e)=>{ handleCopyEmail(e, l.href); sendAnalytics('contact_copy', {link: l.href}) }} aria-label={`Copiar email ${l.href}`}>
                   <Icon type="mail" />
                   {l.label}
                 </button>
@@ -134,7 +148,7 @@ export default function App(){
             if(/loja|mercado/i.test(l.label)) type = 'shop'
 
             return (
-              <a className="btn" key={key} href={l.href} target="_blank" rel="noopener noreferrer">
+              <a className="btn" key={key} href={l.href} target="_blank" rel="noopener noreferrer" onClick={()=> sendAnalytics('link_click', {link: l.href, label: l.label})}>
                 <Icon type={type} />
                 {l.label}
               </a>

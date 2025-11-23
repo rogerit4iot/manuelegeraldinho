@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0" stop-color="#758149" />
+      <stop offset="1" stop-color="#4a5b36" />
+    </linearGradient>
+    <style>
+      .bg{fill:url(#g1)}
+      .title{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-size:56px; fill:#fff; font-weight:800}
+      .subtitle{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-size:28px; fill:rgba(255,255,255,0.92)}
+      .credit{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-size:18px; fill:rgba(255,255,255,0.85)}
+    </style>
+  </defs>
+  <rect width="1200" height="630" class="bg" />
+
+  <!-- Avatar circle -->
+  <defs>
+    <clipPath id="c1"><circle cx="150" cy="150" r="120" /></clipPath>
+  </defs>
+  <g clip-path="url(#c1)">
+    <image href="/manuelegeraldo.jpg" x="30" y="30" width="240" height="240" preserveAspectRatio="xMidYMid slice" />
+  </g>
+  <circle cx="150" cy="150" r="126" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6" />
+
+  <!-- Text -->
+  <text x="320" y="120" class="title">Manuel & Geraldinho</text>
+  <text x="320" y="170" class="subtitle">Loja • TikTok • Instagram • Cupons</text>
+
+  <text x="320" y="230" class="credit">Perfil oficial — manueldaaventura@gmail.com</text>
+
+</svg>
