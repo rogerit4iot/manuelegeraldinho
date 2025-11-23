@@ -56,17 +56,46 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 12px; /* reduzir padding para caber mais */
+  padding: 8px 10px; /* diminuir altura */
   border-radius: 10px;
   text-decoration: none;
   font-weight: 700;
   color: #fff;
   background: linear-gradient(90deg,var(--accent),var(--accent-dark));
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   transition: transform .12s ease, box-shadow .12s ease, background .15s ease;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  min-height: 36px;
 }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+
+/* Icon inside buttons */
+.btn { display:flex; align-items:center; gap:8px; }
+.icon { width:16px; height:16px; flex:0 0 16px; color: rgba(255,255,255,0.95); }
+.btn-copy .icon { color: #fff; }
+
+/* Remove sombra/borda escura apenas do botão de contato */
+.btn-copy { box-shadow: none; }
+.btn-copy:hover { transform: none; }
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 28px;
+  background: rgba(11,18,32,0.92);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.5);
+  font-size: 0.95rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
 
 .card-footer { text-align: center; color: #f3f4f6; font-size: 0.85rem; }
 

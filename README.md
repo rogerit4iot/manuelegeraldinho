@@ -24,6 +24,8 @@ Segue os links e cupons adicionados ao projeto:
 - Link TikTok: `https://www.tiktok.com/@manuel.da.aventura`
 - Link loja Mercado Livre: `https://www.mercadolivre.com.br/social/nnzd`
 
+Contato (email): `manueldaaventura@gmail.com`
+
 Cupons adicionados (código: `NENEZUDO`, desconto: 10%):
 - Petz: `https://www.petz.com.br/` — código `NENEZUDO` (10%)
 - Tapz: `https://tapz.com.br/parceiro/manuelgeraldinho/` — código `NENEZUDO` (10%)

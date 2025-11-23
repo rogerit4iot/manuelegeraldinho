@@ -24,11 +24,26 @@ export default function App(){
   const p = profiles[active]
 
   const links = [
-    { label: 'Instagram', href: 'https://www.instagram.com/manuel_geraldinho/' },
-    { label: 'TikTok', href: 'https://www.tiktok.com/@manuel.da.aventura' },
+    { label: 'Contato', href: 'mailto:manueldaaventura@gmail.com' },
     { label: 'Loja - Mercado Livre', href: 'https://www.mercadolivre.com.br/social/nnzd' },
-    { label: 'Contato', href: 'mailto:contato@meudog.com' }
+    { label: 'TikTok', href: 'https://www.tiktok.com/@manuel.da.aventura' },
+    { label: 'Instagram', href: 'https://www.instagram.com/manuel_geraldinho/' }
   ]
+
+  const [toast, setToast] = useState(null)
+
+  async function handleCopyEmail(e, href){
+    e.preventDefault()
+    try{
+      const email = href.replace(/^mailto:/, '')
+      await navigator.clipboard.writeText(email)
+      setToast('Email copiado para a área de transferência')
+      setTimeout(()=> setToast(null), 2600)
+    }catch(err){
+      setToast('Não foi possível copiar o email')
+      setTimeout(()=> setToast(null), 2600)
+    }
+  }
 
   const coupons = [
     { title: 'Petz', code: 'NENEZUDO', discount: '10%', url: 'https://www.petz.com.br/' },
@@ -81,9 +96,50 @@ export default function App(){
         </div>
 
         <div className="links">
-          {links.map((l, i) => (
-            <a className="btn" key={i} href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
-          ))}
+          {links.map((l, i) => {
+            const isMail = l.href && l.href.startsWith('mailto:')
+            const key = `link-${i}`
+            const Icon = ({type}) => {
+              // simpler, more consistent icons (solid strokes) for better legibility
+              switch(type){
+                case 'mail': return (
+                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><polyline points="21 7 12 13 3 7"/></svg>
+                )
+                case 'shop': return (
+                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2l1.5 3h9L18 2H6z"/><path d="M3 7h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+                )
+                case 'tiktok': return (
+                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 9v6a3 3 0 1 0 3-3V6h3"/><circle cx="20" cy="6" r="1"/></svg>
+                )
+                case 'instagram': return (
+                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r="0.5"/></svg>
+                )
+                default: return null
+              }
+            }
+
+            if(isMail){
+              return (
+                <button key={key} className="btn btn-copy" onClick={(e)=>handleCopyEmail(e, l.href)} aria-label={`Copiar email ${l.href}`}>
+                  <Icon type="mail" />
+                  {l.label}
+                </button>
+              )
+            }
+
+            // choose icon by label
+            let type = 'shop'
+            if(/instagram/i.test(l.label)) type = 'instagram'
+            if(/tiktok/i.test(l.label)) type = 'tiktok'
+            if(/loja|mercado/i.test(l.label)) type = 'shop'
+
+            return (
+              <a className="btn" key={key} href={l.href} target="_blank" rel="noopener noreferrer">
+                <Icon type={type} />
+                {l.label}
+              </a>
+            )
+          })}
         </div>
 
         <div className="coupons" ref={couponsRef}>
@@ -104,6 +160,9 @@ export default function App(){
             <path d="M18 13l-6 6-6-6" fill="white" opacity="0.92"/>
           </svg>
         </div>
+        {toast && (
+          <div className={`toast show`} role="status" aria-live="polite">{toast}</div>
+        )}
 
         <footer className="card-footer">Sem rolagem global — área de links rola internamente</footer>
       </section>
