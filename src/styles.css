@@ -44,12 +44,14 @@ body {
 .bio { margin: 0; color: #374151; font-size: 0.95rem; }
 
 .links {
-  /* Mostrar todos os links principais sem rolagem: usar grid responsivo */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   align-items: stretch;
-  /* Remover rolagem aqui — se houver overflow, os cupons rolam em vez disso */
+}
+.links .btn,
+.links .btn-copy {
+  width: 100%;
 }
 
 .btn {
@@ -117,6 +119,7 @@ body {
 .card[data-active="geraldinho"] .coupon { background:#fff7f0; }
 .coupon-info { font-size:0.9rem; color:#0b1220; }
 .coupon-code { font-size:0.85rem; color:#6b7280; }
+.coupon-note { font-size:0.8rem; color:#374151; margin-top:4px; line-height:1.3; }
 .code { font-weight:700; color:var(--accent); }
 .coupon-link { background:var(--accent); color:#fff; padding:6px 10px; border-radius:8px; text-decoration:none; font-weight:700; }
 .coupon-link:hover { filter:brightness(.95); }

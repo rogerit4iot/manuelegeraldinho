@@ -60,6 +60,12 @@ export default function App(){
   }
 
   const coupons = [
+    {
+      title: 'Nena Pet - Alimentação Natural',
+      code: '10% na primeira compra por CPF',
+      discount: '',
+      url: 'https://wa.me/5515998248575?text=Quero%2010%%20na%20primeira%20compra%20Nena%20Pet%20(Manuel%20%26%20Geraldinho)'
+    },
     { title: 'Petz', code: 'NENEZUDO', discount: '10%', url: 'https://www.petz.com.br/' },
     { title: 'Tapz', code: 'NENEZUDO', discount: '10%', url: 'https://tapz.com.br/parceiro/manuelgeraldinho/' },
     { title: 'Aus Miaus', code: 'NENEZUDO', discount: '10%', url: 'https://www.ausmiaus.com.br/' }
@@ -162,7 +168,7 @@ export default function App(){
             <div className="coupon" key={i}>
               <div className="coupon-info">
                 <strong>{c.title}</strong>
-                <div className="coupon-code">Código: <span className="code">{c.code}</span> — {c.discount}</div>
+                <div className="coupon-code">Código: <span className="code">{c.code}</span>{c.discount ? ` — ${c.discount}` : ''}</div>
               </div>
               <a className="coupon-link" href={c.url} target="_blank" rel="noopener noreferrer">Abrir</a>
             </div>
