@@ -57,6 +57,59 @@ body {
   grid-column: 1 / -1;
 }
 
+.content-switcher {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(11,18,32,0.05);
+  border: 1px solid rgba(11,18,32,0.05);
+}
+.content-tab {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.content-tab.active {
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+.content-tab.active::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 3px;
+  border-radius: 999px;
+  margin: 6px auto 0;
+  background: var(--accent);
+}
+.content-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.links-panel, .coupons-panel {
+  width: 100%;
+}
+.links-panel {
+  animation: fadeSlide .25s ease;
+}
+.coupons-panel {
+  animation: fadeSlide .25s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

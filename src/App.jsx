@@ -21,6 +21,7 @@ const profiles = {
 
 export default function App(){
   const [active, setActive] = useState('manuel')
+  const [activeContent, setActiveContent] = useState('links')
   const p = profiles[active]
 
   const links = [
@@ -77,7 +78,7 @@ export default function App(){
 
   useEffect(() => {
     const el = couponsRef.current
-    if(!el) return
+    if(!el || activeContent !== 'coupons') return
 
     function update(){
       const isScrollable = el.scrollHeight > el.clientHeight + 1
@@ -92,7 +93,11 @@ export default function App(){
     el.addEventListener('scroll', update)
     window.addEventListener('resize', update)
     return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update) }
-  }, [couponsRef])
+  }, [couponsRef, activeContent])
+
+  useEffect(() => {
+    if(activeContent !== 'coupons') setShowMore(false)
+  }, [activeContent])
 
   return (
     <main className="wrap">
@@ -116,92 +121,126 @@ export default function App(){
           <p className="bio">{p.bio}</p>
         </div>
 
-        <div className="links">
-          {links.map((l, i) => {
-            const isMail = l.href && l.href.startsWith('mailto:')
-            const key = `link-${i}`
-            const Icon = ({type}) => {
-              // simpler, more consistent icons (solid strokes) for better legibility
-              switch(type){
-                case 'mail': return (
-                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><polyline points="21 7 12 13 3 7"/></svg>
-                )
-                case 'shop': return (
-                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2l1.5 3h9L18 2H6z"/><path d="M3 7h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
-                )
-                case 'tiktok': return (
-                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 9v6a3 3 0 1 0 3-3V6h3"/><circle cx="20" cy="6" r="1"/></svg>
-                )
-                case 'youtube': return (
-                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><polygon points="11 10 15 12 11 14 11 10"/></svg>
-                )
-                case 'instagram': return (
-                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r="0.5"/></svg>
-                )
-                default: return null
-              }
-            }
-
-            if(isMail){
-              return (
-                <button
-                  key={key}
-                  className={`btn btn-copy ${l.fullWidth ? 'btn-wide' : ''}`}
-                  onClick={(e)=>{ handleCopyEmail(e, l.href); sendAnalytics('contact_copy', {link: l.href}) }}
-                  aria-label={`Copiar email ${l.href}`}
-                >
-                  <Icon type="mail" />
-                  {l.label}
-                </button>
-              )
-            }
-
-            // choose icon by label
-            let type = 'shop'
-            if(/instagram/i.test(l.label)) type = 'instagram'
-            if(/tiktok/i.test(l.label)) type = 'tiktok'
-            if(/youtube/i.test(l.label)) type = 'youtube'
-            if(/loja|mercado/i.test(l.label)) type = 'shop'
-
-            return (
-              <a
-                className={`btn ${l.fullWidth ? 'btn-wide' : ''}`}
-                key={key}
-                href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={()=> sendAnalytics('link_click', {link: l.href, label: l.label})}
-              >
-                <Icon type={type} />
-                {l.label}
-              </a>
-            )
-          })}
+        <div className="content-switcher" role="tablist" aria-label="Acessar links ou cupons">
+          <button
+            id="tab-links"
+            className={`content-tab ${activeContent==='links' ? 'active' : ''}`}
+            aria-selected={activeContent==='links'}
+            aria-controls="panel-links"
+            role="tab"
+            onClick={()=> setActiveContent('links')}
+          >
+            Links
+          </button>
+          <button
+            id="tab-coupons"
+            className={`content-tab ${activeContent==='coupons' ? 'active' : ''}`}
+            aria-selected={activeContent==='coupons'}
+            aria-controls="panel-coupons"
+            role="tab"
+            onClick={()=> setActiveContent('coupons')}
+          >
+            Cupons
+          </button>
         </div>
 
-        <div className="coupons" ref={couponsRef}>
-          <h3>Cupons</h3>
-          {coupons.map((c, i) => (
-            <div className="coupon" key={i}>
-              <div className="coupon-info">
-                <strong>{c.title}</strong>
-                <div className="coupon-code">Código: <span className="code">{c.code}</span>{c.discount ? ` — ${c.discount}` : ''}</div>
-              </div>
-              <a className="coupon-link" href={c.url} target="_blank" rel="noopener noreferrer">Abrir</a>
+        {activeContent === 'links' && (
+          <div className="links-panel" role="tabpanel" id="panel-links" aria-labelledby="tab-links">
+            <div className="links">
+              {links.map((l, i) => {
+                const isMail = l.href && l.href.startsWith('mailto:')
+                const key = `link-${i}`
+                const Icon = ({type}) => {
+                  // simpler, more consistent icons (solid strokes) for better legibility
+                  switch(type){
+                    case 'mail': return (
+                      <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><polyline points="21 7 12 13 3 7"/></svg>
+                    )
+                    case 'shop': return (
+                      <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2l1.5 3h9L18 2H6z"/><path d="M3 7h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+                    )
+                    case 'tiktok': return (
+                      <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 9v6a3 3 0 1 0 3-3V6h3"/><circle cx="20" cy="6" r="1"/></svg>
+                    )
+                    case 'youtube': return (
+                      <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><polygon points="11 10 15 12 11 14 11 10"/></svg>
+                    )
+                    case 'instagram': return (
+                      <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r="0.5"/></svg>
+                    )
+                    default: return null
+                  }
+                }
+
+                if(isMail){
+                  return (
+                    <button
+                      key={key}
+                      className={`btn btn-copy ${l.fullWidth ? 'btn-wide' : ''}`}
+                      onClick={(e)=>{ handleCopyEmail(e, l.href); sendAnalytics('contact_copy', {link: l.href}) }}
+                      aria-label={`Copiar email ${l.href}`}
+                    >
+                      <Icon type="mail" />
+                      {l.label}
+                    </button>
+                  )
+                }
+
+                // choose icon by label
+                let type = 'shop'
+                if(/instagram/i.test(l.label)) type = 'instagram'
+                if(/tiktok/i.test(l.label)) type = 'tiktok'
+                if(/youtube/i.test(l.label)) type = 'youtube'
+                if(/loja|mercado/i.test(l.label)) type = 'shop'
+
+                return (
+                  <a
+                    className={`btn ${l.fullWidth ? 'btn-wide' : ''}`}
+                    key={key}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={()=> sendAnalytics('link_click', {link: l.href, label: l.label})}
+                  >
+                    <Icon type={type} />
+                    {l.label}
+                  </a>
+                )
+              })}
             </div>
-          ))}
-        </div>
-        <div className={`more-indicator ${showMore ? 'visible' : ''}`} aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M12 5v14" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-            <path d="M18 13l-6 6-6-6" fill="white" opacity="0.92"/>
-          </svg>
-        </div>
+          </div>
+        )}
+
+        {activeContent === 'coupons' && (
+          <div className="coupons-panel" role="tabpanel" id="panel-coupons" aria-labelledby="tab-coupons">
+            <div className="coupons" ref={couponsRef}>
+              <h3>Cupons</h3>
+              {coupons.map((c, i) => (
+                <div className="coupon" key={i}>
+                  <div className="coupon-info">
+                    <strong>{c.title}</strong>
+                    <div className="coupon-code">Código: <span className="code">{c.code}</span>{c.discount ? ` – ${c.discount}` : ''}</div>
+                  </div>
+                  <a className="coupon-link" href={c.url} target="_blank" rel="noopener noreferrer">Abrir</a>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeContent === 'coupons' && (
+          <div className={`more-indicator ${showMore ? 'visible' : ''}`} aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 5v14" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+              <path d="M18 13l-6 6-6-6" fill="white" opacity="0.92"/>
+            </svg>
+          </div>
+        )}
         {toast && (
           <div className={`toast show`} role="status" aria-live="polite">{toast}</div>
         )}
 
-        <footer className="card-footer">Sem rolagem global — área de links rola internamente</footer>
+        <footer className="card-footer">Alterne entre Links e Cupons sem apertar a tela toda</footer>
       </section>
     </main>
   )
