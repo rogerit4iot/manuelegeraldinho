@@ -25,9 +25,10 @@ export default function App(){
 
   const links = [
     { label: 'Contato', href: 'mailto:manueldaaventura@gmail.com' },
-    { label: 'Loja - Mercado Livre', href: 'https://www.mercadolivre.com.br/social/nnzd' },
+    { label: 'Loja', href: 'https://www.mercadolivre.com.br/social/nnzd' },
     { label: 'TikTok', href: 'https://www.tiktok.com/@manuel.da.aventura' },
-    { label: 'Instagram', href: 'https://www.instagram.com/manuel_geraldinho/' }
+    { label: 'YouTube', href: 'https://www.youtube.com/@manuel_geraldinho' },
+    { label: 'Instagram', href: 'https://www.instagram.com/manuel_geraldinho/', fullWidth: true }
   ]
 
   const [toast, setToast] = useState(null)
@@ -131,6 +132,9 @@ export default function App(){
                 case 'tiktok': return (
                   <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 9v6a3 3 0 1 0 3-3V6h3"/><circle cx="20" cy="6" r="1"/></svg>
                 )
+                case 'youtube': return (
+                  <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><polygon points="11 10 15 12 11 14 11 10"/></svg>
+                )
                 case 'instagram': return (
                   <svg className="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r="0.5"/></svg>
                 )
@@ -140,7 +144,12 @@ export default function App(){
 
             if(isMail){
               return (
-                <button key={key} className="btn btn-copy" onClick={(e)=>{ handleCopyEmail(e, l.href); sendAnalytics('contact_copy', {link: l.href}) }} aria-label={`Copiar email ${l.href}`}>
+                <button
+                  key={key}
+                  className={`btn btn-copy ${l.fullWidth ? 'btn-wide' : ''}`}
+                  onClick={(e)=>{ handleCopyEmail(e, l.href); sendAnalytics('contact_copy', {link: l.href}) }}
+                  aria-label={`Copiar email ${l.href}`}
+                >
                   <Icon type="mail" />
                   {l.label}
                 </button>
@@ -151,10 +160,18 @@ export default function App(){
             let type = 'shop'
             if(/instagram/i.test(l.label)) type = 'instagram'
             if(/tiktok/i.test(l.label)) type = 'tiktok'
+            if(/youtube/i.test(l.label)) type = 'youtube'
             if(/loja|mercado/i.test(l.label)) type = 'shop'
 
             return (
-              <a className="btn" key={key} href={l.href} target="_blank" rel="noopener noreferrer" onClick={()=> sendAnalytics('link_click', {link: l.href, label: l.label})}>
+              <a
+                className={`btn ${l.fullWidth ? 'btn-wide' : ''}`}
+                key={key}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={()=> sendAnalytics('link_click', {link: l.href, label: l.label})}
+              >
                 <Icon type={type} />
                 {l.label}
               </a>
